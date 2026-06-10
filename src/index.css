@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-surface: #001136;
+  --color-brand-surface-dim: #000c2c;
+  --color-brand-surface-bright: #143578;
+  --color-brand-primary: #b5c4ff;
+  --color-brand-on-primary: #00297b;
+  --color-brand-secondary: #d3ff9a;
+  --color-brand-tertiary: #00d9ff;
+  --color-brand-cta: #FF8A00;
+  --color-brand-glow: rgba(0, 217, 255, 0.15);
+
+  --color-on-surface: #f8fafc;
+  --color-on-surface-variant: #cbd5e1;
+}
+
+/* Custom styles matching the Google Stitch design guidelines */
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 65%, transparent 100%);
+}
+
+.ambient-glow-1 {
+  background: radial-gradient(circle, rgba(0, 217, 255, 0.08) 0%, rgba(0, 17, 54, 0) 70%);
+}
+
+.ambient-glow-2 {
+  background: radial-gradient(circle, rgba(0, 93, 255, 0.05) 0%, rgba(0, 17, 54, 0) 60%);
+}
+
+.glass-card {
+  background: rgba(0, 17, 54, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 217, 255, 0.15);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: inset 0 0 20px rgba(0, 217, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 217, 255, 0.4);
+  box-shadow: inset 0 0 30px rgba(0, 217, 255, 0.15), 0 12px 40px rgba(0, 217, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.glass-input {
+  background: rgba(0, 12, 44, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  border-color: rgba(0, 217, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.15);
+  background: rgba(0, 12, 44, 0.8);
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  background-color: #00d9ff;
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Custom layout wrappers */
+.max-width-container {
+  max-width: 1440px;
+}
