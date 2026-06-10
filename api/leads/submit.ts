@@ -47,11 +47,11 @@ export default async function handler(req: any, res: any) {
       success: true
     });
 
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+  console.error("SMTP ERROR:", error);
 
-    return res.status(500).json({
-      error: "Email send failed"
-    });
-  }
+  return res.status(500).json({
+    error: error?.message || String(error)
+  });
+}
 }
