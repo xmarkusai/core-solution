@@ -1,6 +1,25 @@
 import nodemailer from "nodemailer";
 
 export default async function handler(req: any, res: any) {
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      error: "Method not allowed"
+    });
+  }
+
+  const {
+    fullName,
+    companyName,
+    businessEmail,
+    message
+  } = req.body;
+
+  if (!fullName || !companyName || !businessEmail || !message) {
+    return res.status(400).json({
+      error: "Required fields are missing"
+    });
+  }
+
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -12,25 +31,46 @@ export default async function handler(req: any, res: any) {
       }
     });
 
-    const result = await transporter.sendMail({
+    // Internal notification
+    await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: "markus@coresolution.my",
-      subject: "SMTP Test",
-      text: "SMTP test from Vercel"
+      subject: `New Lead - ${companyName}`,
+      html: `
+        <h2>New Lead Received</h2>
+        <p><strong>Name:</strong> ${fullName}</p>
+        <p><strong>Company:</strong> ${companyName}</p>
+        <p><strong>Email:</strong> ${businessEmail}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    });
+
+    // Auto response to lead
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: businessEmail,
+      subject: "Thank you for contacting Core Solution",
+      html: `
+        <h2>Thank You For Contacting Core Solution</h2>
+
+        <p>Hi ${fullName},</p>
+
+        <p>We have received your enquiry and our team will get back to you shortly.</p>
+
+        <p>Regards,<br/>Core Solution</p>
+      `
     });
 
     return res.status(200).json({
-      success: true,
-      messageId: result.messageId
+      success: true
     });
 
   } catch (error: any) {
     console.error("SMTP ERROR:", error);
 
     return res.status(500).json({
-      error: error?.message || String(error),
-      code: error?.code,
-      response: error?.response
+      error: error?.message || String(error)
     });
   }
 }
