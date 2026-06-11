@@ -1,94 +1,72 @@
 import nodemailer from "nodemailer";
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
-  }
+try {
+const transporter = nodemailer.createTransport({
+host: process.env.SMTP_HOST,
+port: Number(process.env.SMTP_PORT),
+secure: false,
+auth: {
+user: process.env.SMTP_USER,
+pass: process.env.SMTP_PASS
+}
+});
 
-  const {
-    fullName,
-    companyName,
-    businessEmail,
-    message
-  } = req.body;
+```
+console.log("STEP 1");
 
-  if (!fullName || !companyName || !businessEmail || !message) {
-    return res.status(400).json({
-      error: "Required fields are missing"
-    });
-  }
+await transporter.sendMail({
+  from: process.env.SMTP_FROM,
+  to: "markus@coresolution.my",
+  subject: "Lead Test",
+  text: "Internal email test"
+});
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
+console.log("STEP 2");
 
-    // Internal notification
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: "markus@coresolution.my",
-      subject: `New Lead - ${companyName}`,
-      html: `
-        <h2>New Lead Received</h2>
-        <p><strong>Name:</strong> ${fullName}</p>
-        <p><strong>Company:</strong> ${companyName}</p>
-        <p><strong>Email:</strong> ${businessEmail}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `
-    });
+await transporter.sendMail({
+  from: process.env.SMTP_FROM,
+  to: "YOUR_PERSONAL_EMAIL_HERE",
+  subject: "Auto Reply Test",
+  text: "Auto reply test"
+});
 
-    // Auto reply
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: businessEmail,
-      subject: "Thank you for contacting Core Solution",
-      html: `
-        <h2>Thank You For Contacting Core Solution</h2>
-        <p>Hi ${fullName},</p>
-        <p>We have received your enquiry and our team will get back to you shortly.</p>
-        <p>Regards,<br/>Core Solution</p>
-      `
-    });
+console.log("STEP 3");
 
-    // Google Sheets via Apps Script Webhook
-    if (process.env.GOOGLE_SCRIPT_URL) {
-      try {
-        await fetch(process.env.GOOGLE_SCRIPT_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            timestamp: new Date().toISOString(),
-            fullName,
-            companyName,
-            businessEmail,
-            message
-          })
-        });
-      } catch (e) {
-        console.error("Google Sheet Sync Error:", e);
-      }
-    }
+const response = await fetch(process.env.GOOGLE_SCRIPT_URL!, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    fullName: "Test",
+    companyName: "Test Company",
+    businessEmail: "test@test.com",
+    message: "Testing"
+  })
+});
 
-    return res.status(200).json({
-      success: true
-    });
+const text = await response.text();
 
-  } catch (error: any) {
-    console.error("SMTP ERROR:", error);
+console.log("GOOGLE RESPONSE:", text);
 
-    return res.status(500).json({
-      error: error?.message || String(error)
-    });
-  }
+console.log("STEP 4");
+
+return res.status(200).json({
+  success: true,
+  googleResponse: text
+});
+```
+
+} catch (error: any) {
+console.error("FULL ERROR:", error);
+
+```
+return res.status(500).json({
+  error: error?.message || String(error),
+  stack: error?.stack
+});
+```
+
+}
 }
