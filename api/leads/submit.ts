@@ -48,7 +48,7 @@ await transporter.sendMail({
   `
 });
 
-// Auto response to lead
+// Auto response
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
   to: businessEmail,
@@ -62,22 +62,28 @@ await transporter.sendMail({
   `
 });
 
-// Google Sheets Sync
-await pushLeadToGoogleSheets({
-  timestamp: new Date().toISOString(),
-  id: `lead_${Date.now()}`,
-  fullName,
-  companyName,
-  businessEmail,
-  message,
-  sourcePage: "Website Contact Form",
-  leadStatus: "New",
-  leadScore: 0,
-  leadQuality: "Unqualified",
-  lastUpdated: new Date().toISOString(),
-  followUpDate: "",
-  notes: ""
-});
+// Google Sheets (don't crash if it fails)
+try {
+  const result = await pushLeadToGoogleSheets({
+    timestamp: new Date().toISOString(),
+    id: `lead_${Date.now()}`,
+    fullName,
+    companyName,
+    businessEmail,
+    message,
+    sourcePage: "Website Contact Form",
+    leadStatus: "New",
+    leadScore: 0,
+    leadQuality: "Unqualified",
+    lastUpdated: new Date().toISOString(),
+    followUpDate: "",
+    notes: ""
+  });
+
+  console.log("Google Sheets Result:", result);
+} catch (sheetError) {
+  console.error("GOOGLE SHEETS ERROR:", sheetError);
+}
 
 return res.status(200).json({
   success: true
@@ -85,7 +91,7 @@ return res.status(200).json({
 ```
 
 } catch (error: any) {
-console.error("API ERROR:", error);
+console.error("FULL ERROR:", error);
 
 ```
 return res.status(500).json({
@@ -95,3 +101,4 @@ return res.status(500).json({
 
 }
 }
+
