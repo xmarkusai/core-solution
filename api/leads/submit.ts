@@ -46,21 +46,39 @@ export default async function handler(req: any, res: any) {
       `
     });
 
-    // Auto response to lead
+    // Auto reply
     await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: businessEmail,
       subject: "Thank you for contacting Core Solution",
       html: `
         <h2>Thank You For Contacting Core Solution</h2>
-
         <p>Hi ${fullName},</p>
-
         <p>We have received your enquiry and our team will get back to you shortly.</p>
-
         <p>Regards,<br/>Core Solution</p>
       `
     });
+
+    // Google Sheets via Apps Script Webhook
+    if (process.env.GOOGLE_SCRIPT_URL) {
+      try {
+        await fetch(process.env.GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            fullName,
+            companyName,
+            businessEmail,
+            message
+          })
+        });
+      } catch (e) {
+        console.error("Google Sheet Sync Error:", e);
+      }
+    }
 
     return res.status(200).json({
       success: true
