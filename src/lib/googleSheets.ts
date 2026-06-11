@@ -1,5 +1,3 @@
-import crypto from "node:crypto";
-
 export interface LeadData {
 timestamp: string;
 id: string;
@@ -16,13 +14,13 @@ followUpDate: string;
 notes: string;
 }
 
-export function isGoogleSheetsConfigured() {
+export function isGoogleSheetsConfigured(): boolean {
 return false;
 }
 
 export async function pushLeadToGoogleSheets(
 lead: LeadData
 ): Promise<boolean> {
-console.log("Lead received:", lead);
+console.log("Google Sheets disabled", lead);
 return true;
 }
