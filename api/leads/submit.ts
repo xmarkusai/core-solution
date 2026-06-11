@@ -33,22 +33,19 @@ pass: process.env.SMTP_PASS
 });
 
 ```
-// Internal notification
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
-  to: "Markus@coresolution.my",
+  to: "markus@coresolution.my",
   subject: `New Lead - ${companyName}`,
   html: `
     <h2>New Lead Received</h2>
     <p><strong>Name:</strong> ${fullName}</p>
     <p><strong>Company:</strong> ${companyName}</p>
     <p><strong>Email:</strong> ${businessEmail}</p>
-    <p><strong>Message:</strong></p>
-    <p>${message}</p>
+    <p><strong>Message:</strong> ${message}</p>
   `
 });
 
-// Auto response
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
   to: businessEmail,
@@ -57,14 +54,12 @@ await transporter.sendMail({
     <h2>Thank You</h2>
     <p>Hi ${fullName},</p>
     <p>Thank you for contacting Core Solution.</p>
-    <p>We have received your enquiry and our team will contact you shortly.</p>
-    <p>Best regards,<br/>Core Solution</p>
+    <p>Our team will contact you shortly.</p>
   `
 });
 
-// Google Sheets (don't crash if it fails)
 try {
-  const result = await pushLeadToGoogleSheets({
+  await pushLeadToGoogleSheets({
     timestamp: new Date().toISOString(),
     id: `lead_${Date.now()}`,
     fullName,
@@ -79,8 +74,6 @@ try {
     followUpDate: "",
     notes: ""
   });
-
-  console.log("Google Sheets Result:", result);
 } catch (sheetError) {
   console.error("GOOGLE SHEETS ERROR:", sheetError);
 }
@@ -101,4 +94,3 @@ return res.status(500).json({
 
 }
 }
-
