@@ -5,10 +5,8 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // 1. ADD phoneNumber HERE
   const { fullName, companyName, businessEmail, phoneNumber, message } = req.body;
 
-  // 2. ADD phoneNumber TO VALIDATION
   if (!fullName || !companyName || !businessEmail || !phoneNumber || !message) {
     return res.status(400).json({
       error: "Required fields are missing"
@@ -57,7 +55,6 @@ export default async function handler(req: any, res: any) {
       headers: {
         "Content-Type": "application/json"
       },
-      // 3. ADD phoneNumber TO GOOGLE FETCH
       body: JSON.stringify({
         fullName,
         companyName,
@@ -68,19 +65,13 @@ export default async function handler(req: any, res: any) {
     });
 
     if (!googleResponse.ok) {
-      const errorText = await googleResponse.text();
-      console.error("GOOGLE SCRIPT FAILED:", googleResponse.status, errorText);
+      console.error("Google Script failed with status:", googleResponse.status);
     }
 
-    return res.status(200).json({
-      success: true
-    });
+    return res.status(200).json({ success: true });
 
   } catch (error: any) {
     console.error("FULL ERROR:", error);
-
-    return res.status(500).json({
-      error: error?.message || String(error)
-    });
+    return res.status(500).json({ error: error?.message || String(error) });
   }
 }
