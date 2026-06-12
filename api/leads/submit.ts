@@ -1,9 +1,23 @@
 export default async function handler(req: any, res: any) {
-return res.status(200).json({
-success: true,
-smtpHost: process.env.SMTP_HOST,
-smtpUser: process.env.SMTP_USER,
-smtpFrom: process.env.SMTP_FROM,
-googleScriptUrl: process.env.GOOGLE_SCRIPT_URL
-});
+  const response = await fetch(
+    "https://script.google.com/macros/s/AKfycbwOIFq7IfW6jyjC23suWhnCD4ZNxGnl2USb51vsAm12UTPUTguUmcdDgKnkaRCe4kxN/exec",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        fullName: "Test Lead",
+        companyName: "Core Solution",
+        businessEmail: "test@test.com",
+        message: "Testing Apps Script"
+      })
+    }
+  );
+
+  const text = await response.text();
+
+  return res.status(200).json({
+    response: text
+  });
 }
