@@ -8,9 +8,7 @@ export default async function handler(req: any, res: any) {
   const { fullName, companyName, businessEmail, phoneNumber, message } = req.body;
 
   if (!fullName || !companyName || !businessEmail || !phoneNumber || !message) {
-    return res.status(400).json({
-      error: "Required fields are missing"
-    });
+    return res.status(400).json({ error: "Required fields are missing" });
   }
 
   try {
@@ -50,11 +48,9 @@ export default async function handler(req: any, res: any) {
       `
     });
 
-    const googleResponse = await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
+    await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         fullName,
         companyName,
@@ -64,12 +60,7 @@ export default async function handler(req: any, res: any) {
       })
     });
 
-    if (!googleResponse.ok) {
-      console.error("Google Script failed with status:", googleResponse.status);
-    }
-
     return res.status(200).json({ success: true });
-
   } catch (error: any) {
     console.error("FULL ERROR:", error);
     return res.status(500).json({ error: error?.message || String(error) });
