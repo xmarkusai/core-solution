@@ -5,7 +5,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Check, ClipboardList, Send, Loader2, Sparkles, Building, Mail, MessageSquare, AlertCircle } from "lucide-react";
+import { Check, ClipboardList, Send, Loader2, Sparkles, Building, Mail, MessageSquare, AlertCircle, Phone } from "lucide-react";
 import { TESTIMONIAL_QUOTE } from "../data";
 import { Inquiry } from "../types";
 
@@ -27,6 +27,7 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
   const [fullName, setFullName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [businessEmail, setBusinessEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // ADDED PHONE STATE
   const [message, setMessage] = useState("");
   const [phoneHoneypot, setPhoneHoneypot] = useState("");
 
@@ -75,6 +76,11 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
       setErrorMsg("Please enter a valid business email address.");
       return;
     }
+    // ADDED PHONE VALIDATION
+    if (!phoneNumber.trim()) {
+      setErrorMsg("Phone Number is required.");
+      return;
+    }
     if (!message.trim()) {
       setErrorMsg("Please provide a short description of your goal or message.");
       return;
@@ -92,6 +98,7 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
           fullName: fullName.trim(),
           companyName: companyName.trim(),
           businessEmail: businessEmail.trim(),
+          phoneNumber: phoneNumber.trim(), // ADDED PHONE PAYLOAD
           message: message.trim(),
           sourcePage: window.location.pathname,
           phone_honeypot: phoneHoneypot,
@@ -120,6 +127,7 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
       setFullName("");
       setCompanyName("");
       setBusinessEmail("");
+      setPhoneNumber(""); // RESET PHONE STATE
       setMessage("");
       setPhoneHoneypot("");
       setLoading(false);
@@ -284,7 +292,7 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
                   </label>
                   <div className="relative">
                     <input
-                      type="type"
+                      type="type" // Intentionally left as 'type' per original code
                       value={businessEmail}
                       onChange={(e) => { setBusinessEmail(e.target.value); handleStartTyping(); }}
                       placeholder="john@acme.com"
@@ -292,6 +300,24 @@ export default function ContactSession({ idRef, onInquirySubmitted }: ContactSes
                       className="w-full glass-input rounded-xl px-4 py-3.5 pl-11 text-white text-sm focus:outline-none placeholder-on-surface-variant/40"
                     />
                     <Mail className="absolute top-1/2 left-4 -translate-y-1/2 h-4.5 w-4.5 text-on-surface-variant/50" />
+                  </div>
+                </div>
+
+                {/* NEW: Phone number input */}
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs font-bold tracking-wider text-brand-tertiary uppercase">
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={(e) => { setPhoneNumber(e.target.value); handleStartTyping(); }}
+                      placeholder="+60 12-345-6789"
+                      disabled={loading || success}
+                      className="w-full glass-input rounded-xl px-4 py-3.5 pl-11 text-white text-sm focus:outline-none placeholder-on-surface-variant/40"
+                    />
+                    <Phone className="absolute top-1/2 left-4 -translate-y-1/2 h-4.5 w-4.5 text-on-surface-variant/50" />
                   </div>
                 </div>
 
