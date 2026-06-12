@@ -49,7 +49,7 @@ export default async function handler(req: any, res: any) {
       `
     });
 
-    await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
+    await fetch(const googleResponse = await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -60,6 +60,13 @@ export default async function handler(req: any, res: any) {
         businessEmail,
         message
       })
+    });
+
+    // ADD THIS NEW CHECK:
+    if (!googleResponse.ok) {
+      const errorText = await googleResponse.text();
+      console.error("GOOGLE SCRIPT FAILED:", googleResponse.status, errorText);
+    })
     });
 
     return res.status(200).json({
