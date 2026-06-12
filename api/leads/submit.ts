@@ -20,19 +20,14 @@ export default async function handler(req: any, res: any) {
       html: `<p>Name: ${fullName}</p><p>Company: ${companyName}</p><p>Email: ${businessEmail}</p><p>Phone: ${phoneNumber}</p><p>Message: ${message}</p>`
     });
 
-    // Send to Google Sheets
-    const response = await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
+    await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fullName, companyName, businessEmail, phoneNumber, message })
     });
 
-    const result = await response.text();
-    console.log("GOOGLE RESPONSE:", result); // CHECK VERCEL LOGS FOR THIS
-
     return res.status(200).json({ success: true });
   } catch (error: any) {
-    console.error("CRITICAL ERROR:", error);
     return res.status(500).json({ error: error.message });
   }
 }
