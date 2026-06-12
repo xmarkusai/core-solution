@@ -32,7 +32,6 @@ pass: process.env.SMTP_PASS
 });
 
 ```
-// Email to Markus
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
   to: "markus@coresolution.my",
@@ -47,7 +46,6 @@ await transporter.sendMail({
   `
 });
 
-// Auto reply
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
   to: businessEmail,
@@ -63,7 +61,6 @@ await transporter.sendMail({
   `
 });
 
-// Google Sheets
 await fetch(process.env.GOOGLE_SCRIPT_URL as string, {
   method: "POST",
   headers: {
