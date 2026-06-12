@@ -51,11 +51,30 @@ export default function ContactSession() {
     <form onSubmit={handleSubmit}>
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
       
-      <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-      <input type="text" placeholder="Company Name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-      <input type="email" placeholder="Business Email" value={businessEmail} onChange={(e) => setBusinessEmail(e.target.value)} />
-      <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-      <textarea placeholder="Message" value={message} onChange={(e) => setMessage(e.target.value)} />
+      <div>
+        <label>Full Name</label>
+        <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+      </div>
+      
+      <div>
+        <label>Company Name</label>
+        <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+      </div>
+      
+      <div>
+        <label>Business Email</label>
+        <input type="email" value={businessEmail} onChange={(e) => setBusinessEmail(e.target.value)} />
+      </div>
+      
+      <div>
+        <label>Phone Number</label>
+        <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+      </div>
+      
+      <div>
+        <label>Message</label>
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} />
+      </div>
       
       <button type="submit">Book Free AI Consultation</button>
     </form>
