@@ -26,7 +26,7 @@ console.log("STEP 2");
 
 await transporter.sendMail({
   from: process.env.SMTP_FROM,
-  to: "markustan94@gmail.com",
+  to: "YOUR_PERSONAL_EMAIL_HERE",
   subject: "Auto Reply Test",
   text: "Auto reply test"
 });
