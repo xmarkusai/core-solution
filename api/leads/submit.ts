@@ -2,17 +2,10 @@ import nodemailer from "nodemailer";
 
 export default async function handler(req: any, res: any) {
 if (req.method !== "POST") {
-return res.status(405).json({
-error: "Method not allowed"
-});
+return res.status(405).json({ error: "Method not allowed" });
 }
 
-const {
-fullName,
-companyName,
-businessEmail,
-message
-} = req.body;
+const { fullName, companyName, businessEmail, message } = req.body;
 
 if (!fullName || !companyName || !businessEmail || !message) {
 return res.status(400).json({
@@ -41,8 +34,7 @@ await transporter.sendMail({
     <p><strong>Name:</strong> ${fullName}</p>
     <p><strong>Company:</strong> ${companyName}</p>
     <p><strong>Email:</strong> ${businessEmail}</p>
-    <p><strong>Message:</strong></p>
-    <p>${message}</p>
+    <p><strong>Message:</strong> ${message}</p>
   `
 });
 
@@ -54,10 +46,7 @@ await transporter.sendMail({
     <h2>Thank You</h2>
     <p>Hi ${fullName},</p>
     <p>Thank you for contacting Core Solution.</p>
-    <p>We have received your enquiry and our team will contact you shortly.</p>
-    <br/>
-    <p>Regards,</p>
-    <p><strong>Core Solution</strong></p>
+    <p>Our team will contact you shortly.</p>
   `
 });
 
@@ -80,7 +69,7 @@ return res.status(200).json({
 ```
 
 } catch (error: any) {
-console.error("API ERROR:", error);
+console.error("FULL ERROR:", error);
 
 ```
 return res.status(500).json({
